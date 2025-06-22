@@ -60,6 +60,29 @@ def crear_base_comun(avl1, avl2):
 
     return base_comun
 
+def print_tree_hierarchy(tree, node=None, prefix="", is_left=True): #Cool printing function i spent more time than i should have on it
+    """
+    Imprime un árbol AVL en formato jerárquico con ramas visuales.
+
+    Args:
+        tree (AVL): El árbol AVL que se desea imprimir.
+        node (Node, optional): Nodo desde el cual comenzar la impresión. Por defecto es la raíz.
+        prefix (str, optional): Prefijo para alinear los nodos. Por defecto es una cadena vacía.
+        is_left (bool, optional): Indica si el nodo actual es hijo izquierdo. Por defecto es True.
+    """
+    if node is None:
+        node = tree.root()
+
+    if node is not None:
+        branch = "└── " if is_left else "┌── "
+        print(f"{prefix}{branch}{node.key()}: {node.value()}")
+
+        if tree.left(node) or tree.right(node):
+            child_prefix = prefix + ("    " if is_left else "│   ")
+            if tree.left(node):
+                print_tree_hierarchy(tree, tree.left(node), child_prefix, True)
+            if tree.right(node):
+                print_tree_hierarchy(tree, tree.right(node), child_prefix, False)
 
 def menu():
     """
@@ -92,13 +115,20 @@ def menu():
 
             print("Cargando datos de SaludPlus...")
             read_patients("data/pacientes_saludplus.csv", avl_saludplus)
+
             print("Datos de SaludPlus cargados.")
             imprimir_resumen(avl_saludplus, "SaludPlus")
+            print("----------------------------")
+            print_tree_hierarchy(avl_saludplus)
+
 
             print("\nCargando datos de VitalClinic...")
             read_patients("data/pacientes_vitalclinic.csv", avl_vitalclinic)
+
             print("Datos de VitalClinic cargados.")
             imprimir_resumen(avl_vitalclinic, "VitalClinic")
+            print("----------------------------")
+            print_tree_hierarchy(avl_vitalclinic)
 
             print("\n--------------------")
             print("\nDatos correctamente cargados.")
@@ -112,6 +142,8 @@ def menu():
                 avl_combinada = crear_base_combinada(avl_saludplus, avl_vitalclinic)
                 print("Base combinada:")
                 imprimir_resumen(avl_combinada, "SaludCombinada (Base Combinada)")
+                print("----------------------------")
+                print_tree_hierarchy(avl_combinada)
 
         elif opcion == "3":
             if avl_saludplus is None or avl_vitalclinic is None:
@@ -120,6 +152,9 @@ def menu():
                 avl_comun = crear_base_comun(avl_saludplus, avl_vitalclinic)
                 print("Base comun:")
                 imprimir_resumen(avl_comun, "SaludComun (Base Común)")
+                print("----------------------------")
+                print_tree_hierarchy(avl_comun)
+
         elif opcion == "4":
             print("Saliendo del programa...")
             break
