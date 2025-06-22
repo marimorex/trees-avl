@@ -45,6 +45,20 @@ def crear_base_combinada(avl1, avl2):
 
     return base_combinada
 
+from copy import deepcopy
+
+def crear_base_comun(avl1, avl2):
+    """Crea un nuevo AVL con solo los pacientes que están en ambos árboles."""
+    base_comun = AVL()
+
+    for dni in avl1:
+        if dni in avl2:
+            paciente1 = avl1[dni]
+            paciente2 = avl2[dni]
+            fusionado = paciente1.combinar_con(paciente2)
+            base_comun[dni] = fusionado  # Ya es deepcopy por dentro
+
+    return base_comun
 
 
 def menu():
@@ -97,14 +111,15 @@ def menu():
             else:
                 avl_combinada = crear_base_combinada(avl_saludplus, avl_vitalclinic)
                 print("Base combinada:")
-                imprimir_resumen(avl_combinada, "SaludComún (Base Combinada)")
+                imprimir_resumen(avl_combinada, "SaludCombinada (Base Combinada)")
 
         elif opcion == "3":
             if avl_saludplus is None or avl_vitalclinic is None:
                 print("Primero debe cargar los datos de los pacientes.")
             else:
-                print("Fusionando pacientes compartidos...")
-
+                avl_comun = crear_base_comun(avl_saludplus, avl_vitalclinic)
+                print("Base comun:")
+                imprimir_resumen(avl_comun, "SaludComun (Base Común)")
         elif opcion == "4":
             print("Saliendo del programa...")
             break
@@ -116,6 +131,3 @@ def menu():
 
 if __name__ == "__main__":
     menu()
-
-
-
